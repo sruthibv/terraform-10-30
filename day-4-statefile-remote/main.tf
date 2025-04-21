@@ -12,6 +12,11 @@ resource "aws_subnet" "subnet-2" {
     vpc_id = aws_vpc.VPC.id
 }
 
+resource "aws_subnet" "subnet-3" {
+    cidr_block = "10.0.2.0/24"
+    vpc_id = aws_vpc.VPC.id
+}
+
 resource "aws_subnet" "subnet-4" {
     cidr_block = "10.0.3.0/24"
     vpc_id = aws_vpc.VPC.id
