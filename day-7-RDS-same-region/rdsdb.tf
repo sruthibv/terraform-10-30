@@ -90,7 +90,5 @@ resource "aws_db_instance" "db_replica" {
   delete_automated_backups = true
   depends_on              = [ aws_db_instance.rds_test ]
   provider = aws.secondary 
-  # tags = {
-  #   replica = "true"
-  # }
+  
 }
