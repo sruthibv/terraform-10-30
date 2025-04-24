@@ -11,13 +11,6 @@ variable "instance_type" {
     type = string
     default = ""
 }
-
-# subnet id
-variable "subnet_id" {
-    description = "subnet id for public server"
-    type = string
-    default = ""
-}  
    
 # key pair for server
 variable "key_name" {
