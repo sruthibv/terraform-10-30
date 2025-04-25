@@ -1,3 +1,7 @@
+provider "aws" {
+  region = "eu-west-2"
+}
+
 # 1. Creation of VPC
 resource "aws_vpc" "vpc" {
     cidr_block = var.vpc_cidr
@@ -12,7 +16,7 @@ resource "aws_vpc" "vpc" {
 resource "aws_subnet" "pub_1" {
     cidr_block = var.public_subnets.pub_1
     vpc_id = aws_vpc.vpc.id
-    availability_zone = "ap-south-1a"
+    availability_zone = "eu-west-2a"
     tags = {
         Name = "Public-subnet-1"
     }
@@ -21,7 +25,7 @@ resource "aws_subnet" "pub_1" {
 resource "aws_subnet" "pub_2" {
     cidr_block = var.public_subnets.pub_2
     vpc_id = aws_vpc.vpc.id
-    availability_zone = "ap-south-1b"
+    availability_zone = "eu-west-2b"
     tags = {
         Name = "Public-subnet-2"
     }
@@ -31,7 +35,7 @@ resource "aws_subnet" "pub_2" {
 resource "aws_subnet" "pvt_1" {
     cidr_block = var.private_subnets.pvt_1
     vpc_id = aws_vpc.vpc.id
-    availability_zone = "ap-south-1a"
+    availability_zone = "eu-west-2a"
     tags = {
         Name = "Private-subnet-1"
     }
@@ -40,7 +44,7 @@ resource "aws_subnet" "pvt_1" {
 resource "aws_subnet" "pvt_2" {
     cidr_block = var.private_subnets.pvt_2
     vpc_id = aws_vpc.vpc.id
-    availability_zone = "ap-south-1b"
+    availability_zone = "eu-west-2b"
     tags = {
         Name = "Private-subnet-2"
     }
@@ -174,11 +178,11 @@ resource "aws_security_group" "sg" {
 
 
 # 10. Creation of Public server
-resource "aws_instance" "pub_server-1" {
+resource "aws_instance" "pub_server" {
     ami = var.ami
     instance_type = var.instance_type
     subnet_id = aws_subnet.pub_1.id
-    availability_zone = "ap-south-1a"
+    availability_zone = "eu-west-2a"
     associate_public_ip_address = true
     vpc_security_group_ids = [aws_security_group.sg.id]
     tags = {
@@ -187,12 +191,12 @@ resource "aws_instance" "pub_server-1" {
 }
 
 # 11. Creation of Private server
-resource "aws_instance" "pvt_server-1" {
+resource "aws_instance" "pvt_server" {
     ami = var.ami
     instance_type = var.instance_type
-    key_name = "mumbai"
+    key_name = "terraform"
     subnet_id = aws_subnet.pvt_1.id
-    availability_zone = "ap-south-1a"
+    availability_zone = "eu-west-2a"
     associate_public_ip_address = false
     vpc_security_group_ids = [aws_security_group.sg.id]
     tags = {
@@ -200,56 +204,3 @@ resource "aws_instance" "pvt_server-1" {
     }
 }
 
-# 12. Create Target Group
-resource "aws_lb_target_group" "tg-1az" {
-  name     = "target-group-1"
-  port     = 80
-  protocol = "HTTP"
-  vpc_id   = aws_vpc.vpc.id
-
-  health_check {
-    path                = "/"
-    protocol            = "HTTP"
-    matcher             = "200"
-    interval            = 30
-    timeout             = 2
-    healthy_threshold   = 2
-    unhealthy_threshold = 2
-  }
-
-  tags = {
-    Name = "TG-1"
-  }
-}
-
-# 13. Attach Public EC2 to Target Group
-resource "aws_lb_target_group_attachment" "pub_server_attach" {
-  target_group_arn = aws_lb_target_group.tg-1az.arn
-  target_id        = aws_instance.pub_server-1.id
-  port             = 80
-}
-
-# 14. Create Load Balancer
-resource "aws_lb" "lb-1az" {
-  name               = "LB-1"
-  load_balancer_type = "application"
-   internal          = false  # This ensures the ALB is public
-  security_groups    = [aws_security_group.sg.id]
-  subnets            = [aws_subnet.pub_1.id, aws_subnet.pub_2.id]
-
-  tags = {
-    Name = "LB-1"
-  }
-}
-
-# 15. Create Listener for ALB
-resource "aws_lb_listener" "alb_listener" {
-  load_balancer_arn = aws_lb.lb-1az.arn
-  port              = 80
-  protocol          = "HTTP"
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.tg-1az.arn
-  }
-}

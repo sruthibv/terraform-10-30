@@ -24,3 +24,17 @@ variable "private_subnets" {
         pvt_2 = "10.0.4.0/24"
     }
 }
+
+# ami for ec2
+variable "ami" {
+    description = "ami for ec2"
+    type = string
+    default = "ami-0f1dcc636b69a6438"
+}
+
+# instance type
+variable "instance_type" {
+    description = "instance type for ec2"
+    type = string
+    default = "t2.micro"
+}

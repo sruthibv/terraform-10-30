@@ -1,17 +1,15 @@
 
 #Creation of Public server
-resource "aws_instance" "pub_server-1" {
+resource "aws_instance" "pub_server_1" {
     ami = var.ami
     instance_type = var.instance_type
-    
     availability_zone = var.availability_zone
-    associate_public_ip_address = true
     key_name = var.key_name
-    tags = {
-      Name = "Public_server"
-    }
+    tags = var.tags
 }
 
 
-
-    
+#creation of s3
+resource "aws_s3_bucket" "s3" {
+  bucket = var.aws_s3_bucket
+}   

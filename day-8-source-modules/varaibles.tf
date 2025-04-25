@@ -19,12 +19,26 @@ variable "key_name" {
     default = ""
 }  
 
-# subnet id
+# availability zone
 variable "availability_zone" {
     description = "availability for the public server"
     type = string
     default = ""
 }  
 
-    
-    
+variable "tags" {
+  description = "name of the instance"
+  type = map(string)
+  default = {
+    Name = "" 
+  } 
+}
+
+# s3 bucket
+variable "aws_s3_bucket" {
+    description = "s3 bucket unique name"
+    type = string
+    default = ""
+ 
+}
+

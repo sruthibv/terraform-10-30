@@ -175,8 +175,8 @@ resource "aws_security_group" "sg" {
 
 # 10. Creation of Public server
 resource "aws_instance" "pub_server" {
-    ami = "ami-0f1dcc636b69a6438"
-    instance_type = "t2.micro"
+    ami = var.ami
+    instance_type = var.instance_type
     subnet_id = aws_subnet.pub_1.id
     availability_zone = "ap-south-1a"
     associate_public_ip_address = true
@@ -188,8 +188,8 @@ resource "aws_instance" "pub_server" {
 
 # 11. Creation of Private server
 resource "aws_instance" "pvt_server" {
-    ami = "ami-0f1dcc636b69a6438"
-    instance_type = "t2.micro"
+    ami = var.ami
+    instance_type = var.instance_type
     key_name = "mumbai"
     subnet_id = aws_subnet.pvt_1.id
     availability_zone = "ap-south-1a"
