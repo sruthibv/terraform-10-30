@@ -1,9 +1,9 @@
 provider "aws" {
   alias  = "primary"
-  region = "ap-south-1"  # Mumbai
+  region = "eu-west-2"  # london
 }
 
 provider "aws" {
   alias  = "secondary"
-  region = "eu-west-2"  # London, cross region
+  region = "ap-south-1"  # Mumbai, cross region
 }

@@ -1,5 +1,4 @@
 # Creation of RDS DB
-#for this first I'm creating a subnet group
 
 resource "aws_db_subnet_group" "sub_group_db" {
   tags = {
@@ -40,16 +39,6 @@ resource "aws_iam_role_policy_attachment" "rds_monitoring_attach" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
 }
 
-# #security group for rds
-# resource "aws_security_group" "sg_rds" {
-#   name        = "db_sg"
-#   description = "Default sg for the database"
-#   vpc_id      = aws_vpc.sg_rds.id
-
-#   tags = {
-#     Name = "db_sg"
-#   }
-# }
 
 # db instance
 resource "aws_db_instance" "rds_test" {

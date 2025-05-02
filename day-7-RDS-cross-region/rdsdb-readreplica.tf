@@ -58,7 +58,7 @@ resource "aws_db_instance" "rds_test" {
   db_subnet_group_name      = aws_db_subnet_group.sub_group_db.name
   publicly_accessible       = false
   vpc_security_group_ids    = [aws_security_group.sg.id]
-  availability_zone         = "ap-south-1a"
+  availability_zone         = "eu-west-2a"
   skip_final_snapshot       = true
   delete_automated_backups  = true
   backup_retention_period   = 7
@@ -70,18 +70,16 @@ resource "aws_db_instance" "rds_test" {
 resource "aws_db_instance" "cross_region_db_replica" {
   provider                = aws.secondary 
   replicate_source_db     = aws_db_instance.rds_test.arn
-  parameter_group_name    = aws_db_parameter_group.pg_db.name
   instance_class          = var.instance_class
-  availability_zone       = "eu-west-2b"
+  availability_zone       = "ap-south-1a"
   identifier              = "database-1-cross-region-replica"
   publicly_accessible     = false
-  vpc_security_group_ids  = [aws_security_group.sg.id]
+
   apply_immediately       = true
   skip_final_snapshot     = true
   backup_retention_period = 7
   delete_automated_backups= true
   depends_on              = [ aws_db_instance.rds_test ]
-  
-  
+
 }
 
